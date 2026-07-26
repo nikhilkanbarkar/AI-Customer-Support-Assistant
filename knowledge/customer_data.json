@@ -1,0 +1,25 @@
+{
+    "Product Inquiry": {
+        "description": "We offer laptops, smartphones, smartwatches, headphones, keyboards, and accessories.",
+        "working_hours": "Monday to Saturday, 9 AM to 6 PM."
+    },
+
+    "Order Status": {
+        "description": "Orders are usually delivered within 3 to 5 business days.",
+        "tracking": "Customers can track orders using their Order ID."
+    },
+
+    "Returns & Refunds": {
+        "description": "Products can be returned within 7 days of delivery if unused and in original packaging.",
+        "refund_time": "Refunds are processed within 5 to 7 business days."
+    },
+
+    "Technical Support": {
+        "description": "Basic troubleshooting includes restarting the device and checking internet connectivity.",
+        "contact": "For unresolved issues, contact technical support."
+    },
+
+    "General Query": {
+        "description": "Provide polite and helpful assistance for general customer questions."
+    }
+}
