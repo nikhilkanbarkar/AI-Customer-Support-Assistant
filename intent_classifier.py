@@ -1,70 +1,53 @@
+from langchain_core.prompts import ChatPromptTemplate
+
+
 class IntentClassifier:
-    def __init__(self):
-        self.intent_keywords = {
-            "Product Inquiry": [
-                "product",
-                "products",
-                "price",
-                "cost",
-                "buy",
-                "purchase",
-                "available",
-                "stock",
-                "laptop",
-                "phone",
-                "mobile",
-                "headphones",
-                "keyboard",
-                "mouse",
-                "smartwatch"
-            ],
 
-            "Order Status": [
-                "order",
-                "track",
-                "tracking",
-                "delivery",
-                "delivered",
-                "shipping",
-                "shipment",
-                "status",
-                "dispatch"
-            ],
+    def __init__(self, llm):
 
-            "Returns & Refunds": [
-                "return",
-                "refund",
-                "replace",
-                "replacement",
-                "exchange",
-                "cancel",
-                "money back"
-            ],
+        self.llm = llm
 
-            "Technical Support": [
-                "issue",
-                "problem",
-                "error",
-                "broken",
-                "damage",
-                "damaged",
-                "repair",
-                "not working",
-                "bug",
-                "technical"
-            ]
-        }
+        self.prompt = ChatPromptTemplate.from_template(
+            """
+You are an AI Intent Classifier.
 
-    def classify_intent(self, user_query):
-        """
-        Classify user intent based on keyword matching.
-        """
+Classify the user's query into ONLY ONE of these categories.
 
-        user_query = user_query.lower()
+Categories:
+- Product Inquiry
+- Order Status
+- Returns & Refunds
+- Technical Support
+- General Query
 
-        for intent, keywords in self.intent_keywords.items():
-            for keyword in keywords:
-                if keyword in user_query:
-                    return intent
+Rules:
+- Return ONLY the category name.
+- Do not explain.
+- Do not add punctuation.
+- If unsure, return General Query.
+
+Customer Query:
+{query}
+"""
+        )
+
+    def classify_intent(self, query):
+
+        messages = self.prompt.format_messages(query=query)
+
+        response = self.llm.generate_response(messages)
+
+        valid_intents = [
+            "Product Inquiry",
+            "Order Status",
+            "Returns & Refunds",
+            "Technical Support",
+            "General Query"
+        ]
+
+        response = response.strip()
+
+        if response in valid_intents:
+            return response
 
         return "General Query"
