@@ -1,53 +1,63 @@
-from langchain_core.prompts import ChatPromptTemplate
-
-
 class IntentClassifier:
 
-    def __init__(self, llm):
+    def __init__(self):
 
-        self.llm = llm
+        self.intent_keywords = {
+            "Product Inquiry": [
+                "product", "products", "price", "cost", "buy", "purchase",
+                "available", "stock", "laptop", "phone", "mobile",
+                "headphone", "keyboard", "mouse", "smartwatch",
+                "tablet", "brand", "specification"
+            ],
 
-        self.prompt = ChatPromptTemplate.from_template(
-            """
-You are an AI Intent Classifier.
+            "Order Status": [
+                "order", "track", "tracking", "delivery",
+                "shipment", "shipping", "dispatch",
+                "status", "parcel"
+            ],
 
-Classify the user's query into ONLY ONE of these categories.
+            "Returns & Refunds": [
+                "return", "refund", "replace",
+                "replacement", "exchange",
+                "cancel", "money back"
+            ],
 
-Categories:
-- Product Inquiry
-- Order Status
-- Returns & Refunds
-- Technical Support
-- General Query
+            "Technical Support": [
+                "issue", "problem", "error",
+                "bug", "broken", "damage",
+                "damaged", "repair",
+                "not working", "warranty"
+            ],
 
-Rules:
-- Return ONLY the category name.
-- Do not explain.
-- Do not add punctuation.
-- If unsure, return General Query.
+            "Payment": [
+                "payment", "upi", "credit card",
+                "debit card", "net banking",
+                "cod", "cash on delivery",
+                "invoice"
+            ],
 
-Customer Query:
-{query}
-"""
-        )
+            "Shipping": [
+                "shipping charges",
+                "express delivery",
+                "international shipping",
+                "delivery area",
+                "free shipping"
+            ],
+
+            "Account": [
+                "login", "signup", "register",
+                "registration", "password",
+                "account", "profile"
+            ]
+        }
 
     def classify_intent(self, query):
 
-        messages = self.prompt.format_messages(query=query)
+        query = query.lower()
 
-        response = self.llm.generate_response(messages)
-
-        valid_intents = [
-            "Product Inquiry",
-            "Order Status",
-            "Returns & Refunds",
-            "Technical Support",
-            "General Query"
-        ]
-
-        response = response.strip()
-
-        if response in valid_intents:
-            return response
+        for intent, keywords in self.intent_keywords.items():
+            for keyword in keywords:
+                if keyword in query:
+                    return intent
 
         return "General Query"

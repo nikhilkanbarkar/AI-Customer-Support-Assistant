@@ -15,7 +15,7 @@ class CustomerSupportChat:
         self.console = Console()
 
         self.llm = LLMService()
-        self.classifier = IntentClassifier(self.llm)
+        self.classifier = IntentClassifier()
         self.knowledge = KnowledgeBase()
         self.prompt_template = build_prompt()
         self.chat_history = []
@@ -39,7 +39,7 @@ class CustomerSupportChat:
     def process_query(self, user_query):
 
         intent = self.classifier.classify_intent(user_query)
-    
+
         knowledge = self.knowledge.get_information(intent)
 
         messages = self.prompt_template.format_messages(
@@ -47,7 +47,7 @@ class CustomerSupportChat:
             knowledge=knowledge,
             question=user_query
         )
-    
+
         final_messages = []
 
         final_messages.extend(self.chat_history)

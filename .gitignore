@@ -39,3 +39,6 @@ htmlcov/
 
 # Screenshots (optional)
 # screenshots/ 
+
+#to ignore testing file
+test.py
