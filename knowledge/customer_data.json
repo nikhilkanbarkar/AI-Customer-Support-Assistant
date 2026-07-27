@@ -1,25 +1,76 @@
 {
-    "Product Inquiry": {
-        "description": "We offer laptops, smartphones, smartwatches, headphones, keyboards, and accessories.",
-        "working_hours": "Monday to Saturday, 9 AM to 6 PM."
-    },
+  "Product Inquiry": {
+    "company": "TechNova Store",
+    "description": "We sell laptops, smartphones, tablets, smartwatches, headphones, keyboards, mice, and accessories.",
+    "brands": [
+      "Dell",
+      "HP",
+      "Lenovo",
+      "Apple",
+      "Samsung",
+      "ASUS",
+      "Acer"
+    ],
+    "availability": "Product availability depends on current stock.",
+    "working_hours": "Monday to Saturday, 9:00 AM to 6:00 PM.",
+    "support_email": "support@technovastore.com",
+    "support_phone": "+91-9876543210"
+  },
 
-    "Order Status": {
-        "description": "Orders are usually delivered within 3 to 5 business days.",
-        "tracking": "Customers can track orders using their Order ID."
-    },
+  "Order Status": {
+    "delivery_time": "Orders are usually delivered within 3 to 5 business days.",
+    "tracking": "Customers can track orders using their Order ID from the Track Order page.",
+    "shipping": "Free shipping is available on orders above ₹999.",
+    "delay": "During festivals or bad weather, delivery may be delayed.",
+    "cancel_order": "Orders can be cancelled before shipment."
+  },
 
-    "Returns & Refunds": {
-        "description": "Products can be returned within 7 days of delivery if unused and in original packaging.",
-        "refund_time": "Refunds are processed within 5 to 7 business days."
-    },
+  "Returns & Refunds": {
+    "return_policy": "Products can be returned within 7 days of delivery if unused and in their original packaging.",
+    "refund_time": "Refunds are processed within 5 to 7 business days after the returned product passes inspection.",
+    "replacement": "Replacement is available for damaged or defective products.",
+    "non_returnable": [
+      "Gift Cards",
+      "Software Licenses",
+      "Opened Personal Care Products"
+    ]
+  },
 
-    "Technical Support": {
-        "description": "Basic troubleshooting includes restarting the device and checking internet connectivity.",
-        "contact": "For unresolved issues, contact technical support."
-    },
+  "Technical Support": {
+    "basic_steps": [
+      "Restart the device.",
+      "Check power supply.",
+      "Check internet connection.",
+      "Update device software."
+    ],
+    "warranty": "Most electronic products include a one-year manufacturer warranty.",
+    "service_center": "Authorized service centers are available in major cities.",
+    "contact": "If the issue continues, contact our technical support team."
+  },
 
-    "General Query": {
-        "description": "Provide polite and helpful assistance for general customer questions."
-    }
+  "Payment": {
+    "methods": [
+      "Credit Card",
+      "Debit Card",
+      "UPI",
+      "Net Banking",
+      "Cash on Delivery"
+    ],
+    "security": "All payments are secured using encrypted payment gateways."
+  },
+
+  "Shipping": {
+    "domestic": "We deliver across India.",
+    "international": "International shipping is currently unavailable.",
+    "express": "Express delivery is available for selected cities."
+  },
+
+  "Account": {
+    "registration": "Customers can create an account using their email address.",
+    "password_reset": "Password reset is available using the registered email address."
+  },
+
+  "General Query": {
+    "description": "Answer politely and professionally. If information is unavailable in the knowledge base, ask the customer to contact customer support."
+  }
 }
