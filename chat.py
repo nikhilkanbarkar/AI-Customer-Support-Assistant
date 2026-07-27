@@ -7,17 +7,19 @@ from knowledge_base import KnowledgeBase
 from prompts import build_prompt
 from llm import LLMService
 
+from langchain_core.messages import HumanMessage, AIMessage
 
 class CustomerSupportChat:
 
     def __init__(self):
         self.console = Console()
 
-        self.classifier = IntentClassifier()
+        self.llm = LLMService()
+        self.classifier = IntentClassifier(self.llm)
         self.knowledge = KnowledgeBase()
         self.prompt_template = build_prompt()
-        self.llm = LLMService()
-
+        self.chat_history = []
+        
     def welcome(self):
         self.console.print(
             Panel.fit(
@@ -37,16 +39,25 @@ class CustomerSupportChat:
     def process_query(self, user_query):
 
         intent = self.classifier.classify_intent(user_query)
-
+    
         knowledge = self.knowledge.get_information(intent)
 
-        prompt = self.prompt_template.format_messages(
+        messages = self.prompt_template.format_messages(
             intent=intent,
             knowledge=knowledge,
             question=user_query
         )
+    
+        final_messages = []
 
-        response = self.llm.generate_response(prompt)
+        final_messages.extend(self.chat_history)
+
+        final_messages.extend(messages)
+
+        response = self.llm.generate_response(final_messages)
+
+        self.chat_history.append(HumanMessage(content=user_query))
+        self.chat_history.append(AIMessage(content=response))
 
         return intent, response
 
