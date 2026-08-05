@@ -1,21 +1,25 @@
-import streamlit as st
-from chat import CustomerSupportChat
+import time
 from datetime import datetime
 
-# -------------------------------------------------------
+import streamlit as st
+
+from chat import CustomerSupportChat
+
+
+# ==========================================================
 # PAGE CONFIG
-# -------------------------------------------------------
+# ==========================================================
 
 st.set_page_config(
     page_title="AI Customer Support Assistant",
     page_icon="🤖",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
-# -------------------------------------------------------
-# CSS
-# -------------------------------------------------------
+# ==========================================================
+# CUSTOM CSS
+# ==========================================================
 
 st.markdown("""
 <style>
@@ -24,118 +28,171 @@ st.markdown("""
 visibility:hidden;
 }
 
-footer{
-visibility:hidden;
-}
-
 header{
 visibility:hidden;
 }
 
-.main .block-container{
-padding-top:1rem;
+footer{
+visibility:hidden;
+}
+
+.block-container{
+padding-top:1.5rem;
 padding-bottom:1rem;
-padding-left:2rem;
-padding-right:2rem;
+padding-left:3rem;
+padding-right:3rem;
+max-width:1400px;
 }
 
-html,body,[class*="css"]{
-font-family:Segoe UI;
+html,
+body,
+[class*="css"]{
+
+font-family:"Segoe UI",sans-serif;
+font-size:17px;
+
 }
 
-.main{
-background:#0f172a;
+[data-testid="stAppViewContainer"]{
+
+background:#0b1220;
+
 }
 
-.title{
-font-size:42px;
+[data-testid="stSidebar"]{
+
+background:#111827;
+
+border-right:1px solid #1f2937;
+
+}
+
+h1,h2,h3,h4,h5{
+
+color:white;
+
+}
+
+.hero-title{
+
+font-size:46px;
+
 font-weight:700;
+
 text-align:center;
+
 color:white;
-margin-bottom:5px;
+
+margin-bottom:0px;
+
 }
 
-.subtitle{
+.hero-sub{
+
 text-align:center;
-font-size:18px;
-color:#94a3b8;
+
+font-size:19px;
+
+color:#9ca3af;
+
 margin-bottom:30px;
-}
-
-.user-box{
-
-background:#2563eb;
-
-padding:15px;
-
-border-radius:15px;
-
-margin-top:15px;
-
-margin-bottom:10px;
-
-color:white;
-
-}
-
-.bot-box{
-
-background:#1e293b;
-
-padding:15px;
-
-border-radius:15px;
-
-margin-top:10px;
-
-margin-bottom:15px;
-
-border-left:5px solid #38bdf8;
-
-color:white;
-
-}
-
-.intent{
-
-color:#38bdf8;
-
-font-size:13px;
-
-margin-top:5px;
-
-}
-
-.sidebar-title{
-
-font-size:26px;
-
-font-weight:bold;
-
-color:white;
-
-text-align:center;
 
 }
 
 .metric-card{
 
-background:#1e293b;
+background:#182233;
 
-padding:15px;
+padding:18px;
 
-border-radius:15px;
+border-radius:14px;
+
+border:1px solid #263244;
+
+}
+
+.section-title{
+
+font-size:18px;
+
+font-weight:600;
 
 margin-bottom:10px;
+
+color:white;
+
+}
+
+.chat-user{
+
+background:#2563eb;
+
+padding:18px;
+
+border-radius:16px;
+
+margin-bottom:18px;
+
+color:white;
+
+font-size:17px;
+
+line-height:1.7;
+
+}
+
+.chat-ai{
+
+background:#182233;
+
+padding:18px;
+
+border-radius:16px;
+
+margin-bottom:22px;
+
+border-left:5px solid #38bdf8;
+
+color:white;
+
+font-size:17px;
+
+line-height:1.8;
+
+}
+
+.intent{
+
+margin-top:15px;
+
+font-size:13px;
+
+color:#60a5fa;
+
+font-weight:600;
+
+}
+
+.footer{
+
+text-align:center;
+
+padding-top:25px;
+
+padding-bottom:10px;
+
+color:#94a3b8;
+
+font-size:14px;
 
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------------------------------------------
+# ==========================================================
 # SESSION
-# -------------------------------------------------------
+# ==========================================================
 
 if "chatbot" not in st.session_state:
     st.session_state.chatbot = CustomerSupportChat()
@@ -146,28 +203,36 @@ if "messages" not in st.session_state:
 if "chat_count" not in st.session_state:
     st.session_state.chat_count = 0
 
-# -------------------------------------------------------
+# ==========================================================
 # SIDEBAR
-# -------------------------------------------------------
+# ==========================================================
 
 with st.sidebar:
 
-    st.markdown(
-        "<div class='sidebar-title'>🤖 AI Assistant</div>",
-        unsafe_allow_html=True
-    )
+    st.markdown("## 🤖 AI Assistant")
 
-    st.success("Gemini Connected")
+    st.success("🟢 Gemini Connected")
 
-    st.divider()
+    st.markdown("---")
+
+    st.markdown("### 📊 Dashboard")
+
+    c1, c2 = st.columns(2)
+
+    with c1:
+        st.metric(
+            "Chats",
+            st.session_state.chat_count
+        )
+
+    with c2:
+        st.metric(
+            "Messages",
+            len(st.session_state.messages)
+        )
 
     st.metric(
-        "Messages",
-        len(st.session_state.messages)
-    )
-
-    st.metric(
-        "Today's Date",
+        "Today",
         datetime.now().strftime("%d %b %Y")
     )
 
@@ -176,235 +241,221 @@ with st.sidebar:
         "Online"
     )
 
-    st.divider()
+    st.markdown("---")
 
     if st.button(
         "🧹 New Chat",
-        use_container_width=True
+        use_container_width=True,
+        type="primary"
     ):
 
-        st.session_state.messages=[]
-
+        st.session_state.messages = []
+        st.session_state.chat_count = 0
         st.rerun()
 
-    st.divider()
+    st.markdown("---")
 
-    st.markdown("### Features")
+    st.markdown("### 🚀 Technologies")
 
-    st.write("✅ LangChain")
+    st.markdown("""
+- 🐍 Python
+- 🦜 LangChain
+- ✨ Google Gemini
+- 📚 JSON Knowledge Base
+- ⚡ Streamlit
+""")
 
-    st.write("✅ Google Gemini")
+    st.markdown("---")
 
-    st.write("✅ Intent Classification")
+    st.markdown("### 💡 Supported Queries")
 
-    st.write("✅ Knowledge Base")
+    st.caption("📦 Order Status")
+    st.caption("💰 Returns & Refunds")
+    st.caption("🛒 Product Inquiry")
+    st.caption("🛠 Technical Support")
+    st.caption("❓ General Questions")
 
-    st.write("✅ AI Responses")
-
-    st.write("✅ Conversation History")
-
-    st.divider()
+    st.markdown("---")
 
     st.info(
 """
-Developer
+### 👨‍💻 Developer
 
 **Nikhil Kanbarkar**
 
 Machine Learning Enthusiast
 
-AI | ML | Data Science
+Artificial Intelligence • Machine Learning • Data Science
 """
-    )
-
-# -------------------------------------------------------
-# TITLE
-# -------------------------------------------------------
-
-st.markdown(
-"<div class='title'>🤖 AI Customer Support Assistant</div>",
-unsafe_allow_html=True
 )
 
+# ==========================================================
+# HEADER
+# ==========================================================
+
 st.markdown(
-"<div class='subtitle'>Powered by LangChain + Google Gemini</div>",
-unsafe_allow_html=True
-)
-
-# -------------------------------------------------------
-# SHOW OLD CHATS
-# -------------------------------------------------------
-
-for msg in st.session_state.messages:
-
-    if msg["role"]=="user":
-
-        st.markdown(
-            f"""
-<div class='user-box'>
-
-👤 **You**
-
-<br><br>
-
-{msg['content']}
-
+"""
+<div class="hero-title">
+🤖 AI Customer Support Assistant
 </div>
 """,
 unsafe_allow_html=True
-        )
+)
+
+st.markdown(
+"""
+<div class="hero-sub">
+Powered by <b>LangChain</b> • <b>Google Gemini</b> • <b>Streamlit</b>
+</div>
+""",
+unsafe_allow_html=True
+)
+
+# ==========================================================
+# EMPTY SCREEN
+# ==========================================================
+
+if len(st.session_state.messages) == 0:
+
+    left, right = st.columns([1.2,1])
+
+    with left:
+
+        st.markdown("### 💬 Try asking")
+
+        st.info("""
+📦 Where is my order?
+
+💰 I want a refund
+
+💳 Payment methods
+
+🛠 My laptop is not working
+
+🚚 Do you provide express delivery?
+
+🔐 I forgot my password
+""")
+
+    with right:
+
+        st.markdown("### ✨ Features")
+
+        st.success("""
+✅ AI Powered Responses
+
+✅ Intent Classification
+
+✅ Knowledge Base Retrieval
+
+✅ LangChain Integration
+
+✅ Google Gemini
+
+✅ Conversation Memory
+
+✅ Modern Interface
+""")
+
+    st.markdown("---")
+
+# ==========================================================
+# DISPLAY CHAT HISTORY
+# ==========================================================
+
+for message in st.session_state.messages:
+
+    if message["role"] == "user":
+
+        with st.chat_message("user", avatar="👤"):
+
+            st.markdown(message["content"])
 
     else:
 
-        st.markdown(
-            f"""
-<div class='bot-box'>
+        with st.chat_message("assistant", avatar="🤖"):
 
-🤖 **Assistant**
+            st.markdown(message["content"])
 
-<br><br>
+            st.caption(f"Intent : {message['intent']}")
 
-{msg['content']}
-
-<div class='intent'>
-
-Intent : {msg['intent']}
-
-</div>
-
-</div>
-""",
-unsafe_allow_html=True
-        )
-
-# -------------------------------------------------------
-# INPUT
-# -------------------------------------------------------
+# ==========================================================
+# CHAT INPUT
+# ==========================================================
 
 question = st.chat_input(
-    "Ask anything..."
+    "Ask your customer support question..."
 )
-
-# -------------------------------------------------------
-# USER INPUT
-# -------------------------------------------------------
 
 if question:
 
     st.session_state.messages.append(
         {
-            "role": "user",
-            "content": question
+            "role":"user",
+            "content":question
         }
     )
 
     st.rerun()
 
-# -------------------------------------------------------
-# PROCESS LATEST USER MESSAGE
-# -------------------------------------------------------
+# ==========================================================
+# PROCESS USER MESSAGE
+# ==========================================================
 
 if (
     len(st.session_state.messages) > 0
-    and st.session_state.messages[-1]["role"] == "user"
+    and
+    st.session_state.messages[-1]["role"] == "user"
 ):
 
     latest_question = st.session_state.messages[-1]["content"]
 
-    placeholder = st.empty()
+    with st.chat_message("assistant", avatar="🤖"):
 
-    with placeholder.container():
+        thinking = st.empty()
 
-        st.markdown(
-            f"""
-<div class='user-box'>
+        thinking.info("🤖 Thinking...")
 
-👤 <b>You</b>
+        try:
 
-<br><br>
-
-{latest_question}
-
-</div>
-""",
-            unsafe_allow_html=True
-        )
-
-        with st.spinner("🤖 Thinking..."):
-
-            try:
-
-                intent, response = (
-                    st.session_state.chatbot.process_query(
-                        latest_question
-                    )
+            intent, response = (
+                st.session_state.chatbot.process_query(
+                    latest_question
                 )
+            )
 
-            except Exception as e:
+        except Exception as e:
 
-                intent = "System"
+            intent = "System"
 
-                response = f"❌ {str(e)}"
+            response = f"❌ {str(e)}"
 
-    # -----------------------------
-    # STREAMING EFFECT
-    # -----------------------------
+        thinking.empty()
 
-    streamed = ""
+        stream_placeholder = st.empty()
 
-    bot_placeholder = st.empty()
+        streamed_text = ""
 
-    words = response.split()
+        for word in response.split():
 
-    for word in words:
+            streamed_text += word + " "
 
-        streamed += word + " "
+            stream_placeholder.markdown(
+                streamed_text + "▌"
+            )
 
-        bot_placeholder.markdown(
-            f"""
-<div class='bot-box'>
+            time.sleep(0.025)
+        # ------------------------------------------
+        # FINAL RESPONSE
+        # ------------------------------------------
 
-🤖 <b>Assistant</b>
+        stream_placeholder.markdown(response)
 
-<br><br>
+        st.caption(f"🎯 Intent : {intent}")
 
-{streamed}▌
-
-<div class='intent'>
-
-Intent : {intent}
-
-</div>
-
-</div>
-""",
-            unsafe_allow_html=True
-        )
-
-        import time
-
-        time.sleep(0.03)
-
-    bot_placeholder.markdown(
-        f"""
-<div class='bot-box'>
-
-🤖 <b>Assistant</b>
-
-<br><br>
-
-{response}
-
-<div class='intent'>
-
-Intent : {intent}
-
-</div>
-
-</div>
-""",
-        unsafe_allow_html=True
-    )
+    # ------------------------------------------
+    # SAVE RESPONSE
+    # ------------------------------------------
 
     st.session_state.messages.append(
         {
@@ -418,89 +469,62 @@ Intent : {intent}
 
     st.rerun()
 
-# -------------------------------------------------------
-# EMPTY SCREEN
-# -------------------------------------------------------
-
-if len(st.session_state.messages) == 0:
-
-    st.markdown("---")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-
-        st.info(
-            """
-### 💡 Example Questions
-
-• Where is my order?
-
-• I want a refund.
-
-• What payment methods do you accept?
-
-• My laptop is not working.
-
-• Do you provide express delivery?
-
-• I forgot my password.
-"""
-        )
-
-    with col2:
-
-        st.success(
-            """
-### 🚀 Features
-
-✅ AI Powered
-
-✅ LangChain
-
-✅ Google Gemini
-
-✅ Intent Classification
-
-✅ Knowledge Base
-
-✅ Smart Responses
-
-✅ Modern UI
-"""
-        )
-
-# -------------------------------------------------------
+# ==========================================================
 # FOOTER
-# -------------------------------------------------------
+# ==========================================================
 
-st.markdown("---")
+st.markdown("<br>", unsafe_allow_html=True)
 
-c1, c2, c3 = st.columns(3)
+st.divider()
+
+c1, c2, c3, c4 = st.columns(4)
 
 with c1:
-
-    st.caption("🧠 LangChain")
+    st.metric(
+        "Python",
+        "3.x"
+    )
 
 with c2:
-
-    st.caption("⚡ Google Gemini")
+    st.metric(
+        "Framework",
+        "LangChain"
+    )
 
 with c3:
+    st.metric(
+        "Model",
+        "Gemini"
+    )
 
-    st.caption("🐍 Python")
+with c4:
+    st.metric(
+        "UI",
+        "Streamlit"
+    )
+
+st.markdown("<br>", unsafe_allow_html=True)
 
 st.markdown(
-    """
-<div style="text-align:center;
-padding:20px;
-color:gray;
-font-size:14px;">
+"""
+<div class="footer">
 
-Made with ❤️ by <b>Nikhil Kanbarkar</b>
+<b>🤖 AI Customer Support Assistant</b>
+
+<br><br>
+
+Powered by
+<b>Python</b> •
+<b>LangChain</b> •
+<b>Google Gemini</b> •
+<b>Streamlit</b>
+
+<br><br>
+
+Developed with ❤️ by
+<b>Nikhil Kanbarkar</b>
 
 </div>
 """,
-    unsafe_allow_html=True
+unsafe_allow_html=True
 )
-
